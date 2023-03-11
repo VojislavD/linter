@@ -7,7 +7,7 @@ require 'vendor/autoload.php';
 array_shift($argv);
 
 $files = find_files();
-print_r($files);
+
 if (empty($files)) {
     exit;
 }
