@@ -49,7 +49,6 @@ function find_files()
     global $argv;
 
     if ($argv) {
-        return 'ok';
         return $argv;
     }
 
