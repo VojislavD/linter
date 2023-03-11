@@ -30,7 +30,7 @@ exit($failure ? 1 : 0);
 
 function parse_error(array $lines): array
 {
-    preg_match_all('/PHP Parse error:\s+(?:syntax error, )?(.+?)\s+in\s+.+?\.php\s+on\s+line\s+(\d+)/', $lines[0], $matches);
+    preg_match('/PHP Parse error:\s+(?:syntax error, )?(.+?)\s+in\s+.+?\.php\s+on\s+line\s+(\d+)/', $lines[0], $matches);
 
     return [$matches[2], $matches[1]];
 }
