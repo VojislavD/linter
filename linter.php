@@ -18,19 +18,33 @@ if (! $finder->hasResults()) {
 
 $failure = false;
 foreach ($finder as $file) {
-    $absoluteFilePath = $file->getRealPath();
-    $fileNameWithExtension = $file->getRelativePathname();
+    $path = $file->getRelativePathname();
 	
     $output = [];
     $exit_code = 0;
-    exec('php -l ' . $absoluteFilePath . ' 2>&1', $output, $exit_code);
+    exec('php -l ' . $path . ' 2>&1', $output, $exit_code);
 	
     if ($exit_code !== 0) {
+	    [$line, $error] = parse_error($output);
+        display_error($path, $line, $error);
 	    $failure = true;
     }
-    // var_dump($exit_code);
-    // print_r($output);
 }
 
 exit($failure ? 1 : 0);
 
+function parse_error(array $lines): array
+{
+	preg_match('/PHP Parse error:\s+(?:syntax error, )?(.+?)\s+in\s+.+?\.php\s+on\s+line\s+(\d+)/', $lines[0], $matches);
+	
+	return [$matches[2], $matches[1]];
+}
+
+function display_error(string $path, int $line, string $error)
+{
+    echo $path;
+    echo PHP_EOL;
+    echo ' - Line ', $line, ': ', $error;
+    echo PHP_EOL;
+    echo PHP_EOL;
+}
