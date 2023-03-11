@@ -4,30 +4,24 @@ use Symfony\Component\Finder\Finder;
 
 require 'vendor/autoload.php';
 
-$finder = new Finder();
-// find all files in the current directory
-$finder->files()
-    ->in(__DIR__)
-    ->exclude('vendor')
-    ->name('*.php');
+array_shift($argv);
 
-// check if there are any search results
-if (! $finder->hasResults()) {
+$files = find_files();
+print_r($files);
+if (empty($files)) {
     exit;
 }
 
 $failure = false;
 
-foreach ($finder as $file) {
-    $path = $file->getRelativePathname();
-
+foreach ($files as $file) {
     $output = [];
     $exit_code = 0;
-    exec('php -l '.$path.' 2>&1', $output, $exit_code);
+    exec('php -l '.$file.' 2>&1', $output, $exit_code);
 
     if ($exit_code !== 0) {
         [$line, $error] = parse_error($output);
-        display_error($path, $line, $error);
+        display_error($file, $line, $error);
         $failure = true;
     }
 }
@@ -48,4 +42,23 @@ function display_error(string $path, int $line, string $error)
     echo ' - Line ', $line, ': ', $error;
     echo PHP_EOL;
     echo PHP_EOL;
+}
+
+function find_files()
+{
+    global $argv;
+
+    if ($argv) {
+        return 'ok';
+        return $argv;
+    }
+
+    $finder = new Finder();
+
+    $finder->files()
+        ->in(__DIR__)
+        ->exclude('vendor')
+        ->name('*.php');
+
+    return array_map(fn ($file) => $file->getRelativePathname(), iterator_to_array($finder, false));
 }

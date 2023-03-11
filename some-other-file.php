@@ -1,5 +1,5 @@
 <?php
 
-$var = 'Hello \'s there';
+$var = 'Hello 's there';
 
 echo 'something changes';
