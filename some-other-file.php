@@ -1,4 +1,3 @@
 <?php
 
-$var = 'Hello 's there';
-
+$var = 'Hello \'s there';
